@@ -32,15 +32,13 @@ public:
 		return CustomCommandTable;
 	}
 
-	static bool HandleMorphAllCommand(ChatHandler * handler, const char * args)
+	static bool HandleMorphAllCommand(ChatHandler * /* handler */, const char * args)
 	{
-		Player * player = handler->GetSession()->GetPlayer();
-
         bool configSkipAdmin = sConfigMgr->GetBoolDefault("MorphAll.SkipAdmin", true);
 
 		if (!*args)
 			return false;
-		
+
 		uint16 display_id = (uint16)atoi((char*)args);
 
 		if (!display_id)
@@ -62,9 +60,8 @@ public:
 		return true;
 	}
 
-	static bool HandleDeMorphAllCommand(ChatHandler * handler, const char * args)
+	static bool HandleDeMorphAllCommand(ChatHandler * /* handler */, const char * /* args */)
 	{
-		Player * player = handler->GetSession()->GetPlayer();
 		SessionMap const& m_sessions = sWorld->GetAllSessions();
 
         for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
@@ -84,7 +81,7 @@ class morph_all_command_World : public WorldScript
 public:
     morph_all_command_World() : WorldScript("morph_all_command_World") { }
 
-    void OnStartup() override 
+    void OnStartup() override
     {
         // Show this On worldserver startup
         sLog->outString("");
@@ -96,7 +93,7 @@ public:
 
     void OnAfterConfigLoad(bool reload) override
     {
-        if (reload) 
+        if (reload)
         {
             // Show this if ".reload config" command is used
             sLog->outString("");
