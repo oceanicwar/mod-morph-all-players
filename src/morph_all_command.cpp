@@ -1,14 +1,3 @@
-/*
-
-		This is for AzerothCpre 3.3.5 (25-March-2019)
-
-		What it does?
-		Bassically, it loops through all active sessions and change display id of every online player.
-		Type: .allmorph 999 (this will morph all players into a crab)
-
-		I made it mostly for learning purposes.
-*/
-
 #include "ScriptMgr.h"
 #include "Chat.h"
 #include "Player.h"
@@ -26,15 +15,21 @@ public:
 	{
 		static std::vector<ChatCommand> CustomCommandTable =
 		{
-			{ "allmorph",     SEC_ADMINISTRATOR,      false,      &HandleMorphAllCommand,         "" },	//custom morph
-			{ "alldemorph",   SEC_ADMINISTRATOR,      false,      &HandleDeMorphAllCommand,       "" }
+			{ "morphall",     SEC_ADMINISTRATOR,      false,      &HandleMorphAllCommand,         "" },	//custom morph
+			{ "demorphall",   SEC_ADMINISTRATOR,      false,      &HandleDeMorphAllCommand,       "" }
 		};
 		return CustomCommandTable;
 	}
 
 	static bool HandleMorphAllCommand(ChatHandler * /* handler */, const char * args)
 	{
+
+		Player * player = handler->GetSession()->GetPlayer();
+
+        bool configSkipSpecificGmLevel = sConfigMgr->GetBoolDefault("MorphAll.SkipSpecificGmLevel", true);
+
         bool configSkipAdmin = sConfigMgr->GetBoolDefault("MorphAll.SkipAdmin", true);
+
 
 		if (!*args)
 			return false;
@@ -51,8 +46,9 @@ public:
             if (!itr->second || !itr->second->GetPlayer() || !itr->second->GetPlayer()->IsInWorld())
                 continue;
 
-            if (configSkipAdmin && itr->second->GetPlayer()->GetSession()->GetSecurity() == SEC_ADMINISTRATOR)
-                continue; // skip if player is Admin
+            // skip depending on player level
+            if (itr->second->GetPlayer()->GetSession()->GetSecurity() >= configSkipSpecificGmLevel)
+                continue;
 
 			itr->second->GetPlayer()->SetDisplayId(display_id);
 		}
