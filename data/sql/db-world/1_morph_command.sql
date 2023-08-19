@@ -1,4 +1,4 @@
-SET @REQUIRED_GMLEVEL=3;
+SET @REQUIRED_GMLEVEL=2;
 DELETE FROM `command` WHERE `name` IN ('morphall', 'demorphall');
 INSERT INTO `command` (`name`, `security`, `help`) VALUES
 ('morphall', @REQUIRED_GMLEVEL, 'Syntax: .morphall #displayid \r\n\r\nChange players model id to #displayid.'),
